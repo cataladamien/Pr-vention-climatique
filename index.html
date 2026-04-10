@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prévention Climat — Diagnostic de vulnérabilité</title>
   <link rel="stylesheet" href="css/style.css" />
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -14,12 +12,12 @@
   <header id="header">
     <div class="header-inner">
       <a href="#" class="logo" onclick="showPage('accueil');return false;">
-        <i data-lucide="shield"></i>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
         <span>Prévention Climat</span>
       </a>
       <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">
-        <i data-lucide="menu" id="menu-icon-open"></i>
-        <i data-lucide="x" id="menu-icon-close" style="display:none"></i>
+        <svg id="menu-icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <svg id="menu-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
       <nav id="main-nav">
         <a href="#" class="nav-link active" data-page="accueil" onclick="showPage('accueil');return false;">Accueil</a>
@@ -42,7 +40,9 @@
   <main id="page-accueil" class="page">
     <div class="container">
       <div class="hero">
-        <div class="hero-icon"><i data-lucide="shield"></i></div>
+        <div class="hero-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </div>
         <h1>Prévention des risques climatiques</h1>
         <p class="hero-sub">Évaluez la vulnérabilité de votre entreprise face aux aléas climatiques et obtenez un plan d'actions personnalisé.</p>
       </div>
@@ -51,7 +51,7 @@
         <p><strong>Un diagnostic précédent a été trouvé.</strong></p>
         <div class="banner-actions">
           <button class="btn btn-primary btn-sm" onclick="showPage('resultats')">Voir mes résultats</button>
-          <button class="btn btn-outline btn-sm" onclick="resetAll()"><i data-lucide="rotate-ccw"></i> Recommencer</button>
+          <button class="btn btn-outline btn-sm" onclick="resetAll()">&#x21bb; Recommencer</button>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
 
       <div class="text-center">
         <button class="btn btn-primary btn-lg" id="btn-start" disabled onclick="startDiagnostic()">
-          Commencer le diagnostic <i data-lucide="arrow-right"></i>
+          Commencer le diagnostic &#x2192;
         </button>
         <p class="text-muted text-sm" id="start-hint">Sélectionnez un profil d'entreprise pour continuer</p>
       </div>
@@ -129,10 +129,10 @@
 
       <div class="nav-buttons">
         <button class="btn btn-ghost" id="btn-prev" onclick="prevStep()" disabled>
-          <i data-lucide="arrow-left"></i> Précédent
+          &#x2190; Précédent
         </button>
         <button class="btn btn-primary" id="btn-next" onclick="nextStep()" disabled>
-          Suivant <i data-lucide="arrow-right"></i>
+          Suivant &#x2192;
         </button>
       </div>
     </div>
@@ -144,13 +144,13 @@
       <div class="page-header">
         <h1>Résultats du diagnostic</h1>
         <button class="btn btn-outline btn-sm no-print" onclick="exportPdf('results-content','diagnostic-climat')">
-          <i data-lucide="file-down"></i> Exporter PDF
+          &#x1F4E5; Exporter PDF
         </button>
       </div>
       <div id="results-content"></div>
       <div class="text-center no-print" style="margin-top:2rem">
         <button class="btn btn-primary btn-lg" onclick="showPage('actions')">
-          Voir mon plan d'actions <i data-lucide="arrow-right"></i>
+          Voir mon plan d'actions &#x2192;
         </button>
       </div>
     </div>
@@ -162,7 +162,7 @@
       <div class="page-header">
         <h1>Plan d'actions</h1>
         <button class="btn btn-outline btn-sm no-print" onclick="exportPdf('actions-content','plan-actions-climat')">
-          <i data-lucide="file-down"></i> Exporter PDF
+          &#x1F4E5; Exporter PDF
         </button>
       </div>
       <div id="actions-content"></div>
@@ -173,7 +173,7 @@
   <main id="page-urgence" class="page hidden">
     <div class="container">
       <div class="urgence-header">
-        <i data-lucide="alert-triangle" class="icon-orange"></i>
+        <span style="font-size:1.75rem">&#x26A0;&#xFE0F;</span>
         <h1>Fiches réflexes d'urgence</h1>
       </div>
       <p class="text-muted">Gestes de prévention à adopter en cas d'alerte météo. Imprimez ces fiches et affichez-les dans vos locaux.</p>
