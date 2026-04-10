@@ -1,0 +1,121 @@
+/* Données du guide AXA Prévention Climat – ne pas modifier manuellement */
+const GUIDE_DATA = {
+  diagnostic: {
+    title: "Autodiagnostic de vulnérabilité climatique",
+    description: "Quelques questions simples pour repérer les points de vulnérabilité de votre entreprise.",
+    scoring: {
+      majorite_oui: { level: "faible", label: "Risque faible", message: "Votre entreprise est globalement bien protégée. Continuez à maintenir vos dispositifs de prévention." },
+      mixte: { level: "modere", label: "Risque modéré", message: "Certains points de vulnérabilité méritent votre attention. Un plan d'actions ciblé est recommandé." },
+      majorite_non: { level: "eleve", label: "Risque élevé", message: "Un diagnostic approfondi avec un bureau d'études est fortement recommandé (ex : CEREG, Mayane, Socotec)." }
+    },
+    categories: [
+      {
+        id: "exposition", label: "Exposition géographique", icon: "map-pin",
+        questions: [
+          { id: "q1", text: "Vos locaux sont-ils situés hors d'une zone inondable ?", why: "L'inondabilité peut être vérifiée sur Géorisques. Une zone inondable est susceptible d'être envahie par l'eau lors d'une crue, de ruissellements, par remontée de nappe ou submersion marine." },
+          { id: "q2", text: "Votre département est-il relativement peu concerné par la Vigilance Météo-France orange ou rouge (tempête, grêle) ?", why: "Les alertes orange/rouge signalent des événements climatiques violents ; connaître leur fréquence aide à anticiper les protections." },
+          { id: "q3", text: "Avez-vous effectué vos obligations légales de débroussaillage régulier (incendie) ?", why: "Le débroussaillage diminue le risque incendie et freine la propagation et l'intensité des feux de forêt." },
+          { id: "q4", text: "Disposez-vous de protections physiques (batardeaux, systèmes de drainage, clapets anti-retour…) ?", why: "Ces équipements limitent l'entrée d'eau dans les locaux et protègent les biens." }
+        ]
+      },
+      {
+        id: "biens", label: "Protection des biens", icon: "shield",
+        questions: [
+          { id: "q5", text: "Votre matériel et vos stocks sont-ils protégés des intempéries et stockés hors zone sensible ?", why: "Un stockage au-dessus du sol évite la corruption des denrées, la détérioration du matériel électrique et la propagation de produits chimiques." },
+          { id: "q6", text: "Les actifs de valeur sont-ils situés en intérieur, ou l'activité se pratique-t-elle beaucoup en intérieur ?", why: "La grêle peut fortement endommager les parcs automobiles ou activités viticoles. Les vagues de chaleur peuvent imposer une interruption d'activité." },
+          { id: "q7", text: "Vos données sont-elles sauvegardées automatiquement chez un prestataire externe ?", why: "Les inondations ou vagues de chaleur peuvent endommager les serveurs. Stocker les données à plusieurs endroits favorise la continuité." }
+        ]
+      },
+      {
+        id: "humain", label: "Ressources humaines", icon: "users",
+        questions: [
+          { id: "q8", text: "Travaillez-vous dans un secteur peu exposé aux vagues de chaleur et intempéries ?", why: "Les secteurs agricole, industriel et bâtiment sont particulièrement exposés aux vagues de chaleur pouvant affecter la santé des salariés." },
+          { id: "q9", text: "Vos salariés savent-ils comment réagir en cas d'incident majeur (inondation, incendie, coupure d'énergie) ?", why: "La réaction rapide du personnel limite les dommages et préserve la sécurité humaine." },
+          { id: "q10", text: "Disposez-vous d'un plan de continuité d'activité en cas d'interruption prolongée liée à un événement climatique ?", why: "Un PCA organise la reprise rapide de l'activité après un sinistre pour limiter les pertes d'exploitation." }
+        ]
+      },
+      {
+        id: "dependances", label: "Dépendances externes", icon: "link",
+        questions: [
+          { id: "q11", text: "Disposez-vous d'alternatives (fournisseurs, sites de production, stockage de secours) ?", why: "La diversification réduit la dépendance et la vulnérabilité à un sinistre localisé." },
+          { id: "q12", text: "Avez-vous identifié vos clients prioritaires en cas de rupture d'activité ?", why: "Prioriser ses clients et projets évite de mettre en péril les relations commerciales les plus importantes." },
+          { id: "q13", text: "Vos installations sont-elles indépendantes de l'eau pour des processus critiques (sécheresse) ?", why: "Évaluer sa dépendance à l'eau permet de prévoir une pénurie et des solutions adaptées." }
+        ]
+      },
+      {
+        id: "conformite", label: "Conformité et gestion du risque", icon: "clipboard-check",
+        questions: [
+          { id: "q14", text: "Connaissez-vous les dispositifs locaux liés aux risques naturels (PPRN, PAPI, PCS) ?", why: "Ces dispositifs locaux indiquent les risques du territoire et les obligations des entreprises en prévention." },
+          { id: "q15", text: "Votre document unique d'évaluation des risques (DUERP) intègre-t-il les risques climatiques ?", why: "Le DUERP est obligatoire dès le premier salarié. L'amende peut atteindre 7 500 € pour une personne morale." }
+        ]
+      }
+    ]
+  },
+  plan_actions: {
+    par_profil: [
+      {
+        id: "flux", label: "Entreprise avec beaucoup de flux (logistique, livraisons, sites…)",
+        prevention: ["Définir le bon interlocuteur et le bon site pour la réception des alertes météo", "Surélever les quais de chargement", "Installer les zones de stationnement hors zone inondable", "Investir dans des équipements de protection (batardeaux, clapets anti-retour…)"],
+        continuite: ["Prévoir un plan de télétravail d'urgence et un canal de communication", "Identifier des entrepôts partenaires", "Préparer des itinéraires alternatifs"]
+      },
+      {
+        id: "stocks", label: "Entreprise avec des stocks de matériel sensible",
+        prevention: ["Stocker le matériel et produits sensibles en hauteur, hors sous-sol, dans des contenants étanches", "Investir dans des équipements de protection (batardeaux, clapets anti-retour…)", "Sécuriser les réseaux électriques (tableau électrique dans armoire étanche surélevée)"],
+        continuite: ["Maintenir un inventaire numérique sauvegardé sur le cloud", "Construire un protocole d'évacuation des stocks sensibles et former les équipes"]
+      },
+      {
+        id: "bati", label: "Construction / adaptation du bâti",
+        prevention: ["Choisir un terrain adapté en consultant le PPRI, éviter les zones proches de l'eau", "Surélever les planchers", "Créer des pentes naturelles, entretenir les canaux", "Surélever les prises électriques au-dessus du sol"],
+        continuite: ["Définir des zones refuge et des entrepôts alternatifs avec signalétique claire", "Prévoir des alimentations de secours (groupes électrogènes, onduleurs)"]
+      }
+    ],
+    par_question: {
+      q1: { non: ["Vérifier votre exposition sur Géorisques", "Investir dans des protections physiques (batardeaux, clapets anti-retour)", "Surélever les équipements sensibles au-dessus du niveau de crue", "Consulter le PPRI de votre commune"] },
+      q2: { non: ["S'inscrire aux alertes Vigilance Météo-France", "Mettre en place un protocole d'alerte interne", "Préparer des protections physiques mobilisables rapidement"] },
+      q3: { non: ["Réaliser le débroussaillage réglementaire autour de vos locaux", "Vérifier les obligations légales de votre commune en matière d'incendie"] },
+      q4: { non: ["Installer des batardeaux aux entrées vulnérables", "Mettre en place des clapets anti-retour sur les canalisations", "Vérifier et entretenir les systèmes de drainage existants"] },
+      q5: { non: ["Déplacer les stocks hors sous-sol et hors zones inondables", "Utiliser des contenants étanches pour les produits sensibles", "Stocker les produits chimiques en hauteur pour éviter la propagation"] },
+      q6: { non: ["Prévoir des abris ou garages couverts pour le parc automobile", "Adapter les horaires de travail en cas de forte chaleur", "Installer des filets anti-grêle si activité viticole ou agricole"] },
+      q7: { non: ["Mettre en place une sauvegarde automatique chez un prestataire externe", "Stocker les données à plusieurs endroits géographiquement distincts", "Tester régulièrement la restauration des sauvegardes"] },
+      q8: { non: ["Prévoir des zones ventilées et de repos pour les salariés", "Adapter les horaires de travail (début tôt le matin)", "Contrôler et maintenir les systèmes de climatisation"] },
+      q9: { non: ["Former les salariés aux gestes d'urgence (inondation, incendie, coupure d'énergie)", "Afficher les consignes de sécurité dans les locaux", "Organiser des exercices d'évacuation réguliers"] },
+      q10: { non: ["Élaborer un Plan de Continuité d'Activité (PCA)", "Identifier les activités critiques à maintenir en priorité", "Prévoir un dispositif de télétravail d'urgence"] },
+      q11: { non: ["Identifier des fournisseurs alternatifs", "Repérer des sites de production ou de stockage de secours", "Contractualiser des accords de backup avec des partenaires"] },
+      q12: { non: ["Lister et prioriser vos clients stratégiques", "Définir un protocole de communication de crise vers les clients", "Préparer des solutions dégradées pour maintenir le service minimum"] },
+      q13: { non: ["Évaluer votre dépendance à l'eau pour les processus critiques", "Identifier des solutions de remplacement en cas de pénurie", "Stocker une réserve d'eau pour les processus essentiels"] },
+      q14: { non: ["Consulter le PPRN de votre commune sur Géorisques", "Se renseigner sur le PCS (Plan Communal de Sauvegarde) local", "Vérifier si votre zone est couverte par un PAPI"] },
+      q15: { non: ["Intégrer les risques climatiques dans votre DUERP", "Mettre à jour le DUERP annuellement (obligation légale)", "Documenter les mesures de prévention mises en place"] }
+    }
+  },
+  urgence: {
+    tempete: {
+      label: "Tempête", icon: "wind",
+      jours_avant: ["Vérifier l'état des cheminements d'écoulement des eaux sur le site", "Identifier le matériel sensible et prévoir un plan pour le mettre à l'abri", "Tailler les arbres proches du site"],
+      heures_avant: ["Fermer l'ensemble des ouvertures (portes, fenêtres, hangars, volets)", "Mettre à l'abri tout matériel ou équipement extérieur", "Indiquer aux salariés de ne pas utiliser leurs véhicules et de rester chez eux"]
+    },
+    inondation: {
+      label: "Inondation", icon: "droplets",
+      jours_avant: ["S'assurer du bon fonctionnement des clapets anti-retour et batardeaux", "Surélever les équipements et stocks sensibles", "Stationner les véhicules en point haut", "Anticiper un plan d'évacuation et de télétravail"],
+      heures_avant: ["Respecter les consignes de sécurité des autorités", "Indiquer aux collaborateurs absents de ne pas se rendre sur site", "Obturer les ouvertures avec batardeaux, sacs de sable ou barrières étanches"]
+    },
+    canicule: {
+      label: "Vague de chaleur", icon: "thermometer-sun",
+      jours_avant: ["Prévoir des zones ventilées et de repos pour les salariés", "Vérifier le bon fonctionnement des systèmes de climatisation et d'hydratation", "Adapter les horaires (travail tôt le matin)", "Contrôler et maintenir les systèmes de réfrigération"],
+      heures_avant: ["Informer les salariés des risques spécifiques liés à la chaleur", "Augmenter la fréquence des pauses de récupération", "Distribuer eau et ventilateurs portatifs", "Surveiller les signes de coup de chaleur du personnel"]
+    }
+  },
+  leviers_discours: [
+    { id: "economique", label: "Levier économique", icon: "euro", argument: "1 € investi dans l'adaptation rapporte jusqu'à 10 € de bénéfices en 10 ans. Le risque inondation devrait peser 50 milliards d'euros sur 2020-2050, soit +81% vs la période passée." },
+    { id: "reglementaire", label: "Levier réglementaire", icon: "scale", argument: "Obligation légale du DUERP dès le premier salarié (amende jusqu'à 7 500 €). Le non-respect des mesures de prévention contractuelles peut impacter l'indemnisation." },
+    { id: "strategique", label: "Levier stratégique", icon: "target", argument: "Une semaine d'arrêt peut faire perdre du chiffre d'affaires et des clients. La prévention est un levier de continuité d'activité." },
+    { id: "responsabilite", label: "Levier responsabilité", icon: "heart-handshake", argument: "Vos équipes vous font confiance, vous êtes un leader responsable. Et si ça vous arrivait demain ?" },
+    { id: "social", label: "Levier social et managérial", icon: "users", argument: "Une entreprise où les collaborateurs se sentent protégés fidélise mieux. La prévention est un argument de recrutement." },
+    { id: "reputationnel", label: "Levier réputationnel", icon: "award", argument: "Investir en prévention valorise la marque employeur, renforce la confiance des clients et partenaires." }
+  ]
+};
+
+const PROFILE_TYPES = [
+  { id: "flux", label: "Flux & logistique", description: "Livraisons, multi-sites, transport", icon: "truck" },
+  { id: "stocks", label: "Stocks sensibles", description: "Matériel, produits chimiques, denrées", icon: "package" },
+  { id: "bati", label: "Bâti & construction", description: "Locaux, entrepôts, chantiers", icon: "building" }
+];

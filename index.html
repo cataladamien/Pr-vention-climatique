@@ -1,13 +1,193 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prévention Climat - Diagnostic de vulnérabilité</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prévention Climat — Diagnostic de vulnérabilité</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header id="header">
+    <div class="header-inner">
+      <a href="#" class="logo" onclick="showPage('accueil');return false;">
+        <i data-lucide="shield"></i>
+        <span>Prévention Climat</span>
+      </a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">
+        <i data-lucide="menu" id="menu-icon-open"></i>
+        <i data-lucide="x" id="menu-icon-close" style="display:none"></i>
+      </button>
+      <nav id="main-nav">
+        <a href="#" class="nav-link active" data-page="accueil" onclick="showPage('accueil');return false;">Accueil</a>
+        <a href="#" class="nav-link" data-page="diagnostic" onclick="showPage('diagnostic');return false;">Diagnostic</a>
+        <a href="#" class="nav-link" data-page="resultats" onclick="showPage('resultats');return false;">Résultats</a>
+        <a href="#" class="nav-link" data-page="actions" onclick="showPage('actions');return false;">Plan d'actions</a>
+        <a href="#" class="nav-link" data-page="urgence" onclick="showPage('urgence');return false;">Fiches d'urgence</a>
+      </nav>
+    </div>
+    <nav id="mobile-nav" class="hidden">
+      <a href="#" class="nav-link active" data-page="accueil" onclick="showPage('accueil');return false;">Accueil</a>
+      <a href="#" class="nav-link" data-page="diagnostic" onclick="showPage('diagnostic');return false;">Diagnostic</a>
+      <a href="#" class="nav-link" data-page="resultats" onclick="showPage('resultats');return false;">Résultats</a>
+      <a href="#" class="nav-link" data-page="actions" onclick="showPage('actions');return false;">Plan d'actions</a>
+      <a href="#" class="nav-link" data-page="urgence" onclick="showPage('urgence');return false;">Fiches d'urgence</a>
+    </nav>
+  </header>
+
+  <!-- ===== PAGE: ACCUEIL ===== -->
+  <main id="page-accueil" class="page">
+    <div class="container">
+      <div class="hero">
+        <div class="hero-icon"><i data-lucide="shield"></i></div>
+        <h1>Prévention des risques climatiques</h1>
+        <p class="hero-sub">Évaluez la vulnérabilité de votre entreprise face aux aléas climatiques et obtenez un plan d'actions personnalisé.</p>
+      </div>
+
+      <div id="existing-banner" class="banner hidden">
+        <p><strong>Un diagnostic précédent a été trouvé.</strong></p>
+        <div class="banner-actions">
+          <button class="btn btn-primary btn-sm" onclick="showPage('resultats')">Voir mes résultats</button>
+          <button class="btn btn-outline btn-sm" onclick="resetAll()"><i data-lucide="rotate-ccw"></i> Recommencer</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Informations de l'entreprise</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nom de l'entreprise</label>
+            <input type="text" id="profile-name" placeholder="Ex : SARL Dupont" />
+          </div>
+          <div class="form-group">
+            <label>Localisation</label>
+            <input type="text" id="profile-location" placeholder="Ex : Nîmes (30)" />
+          </div>
+          <div class="form-group">
+            <label>Secteur d'activité</label>
+            <select id="profile-sector">
+              <option value="">Sélectionner...</option>
+              <option>Agriculture / Agroalimentaire</option>
+              <option>Industrie / Manufacture</option>
+              <option>BTP / Construction</option>
+              <option>Commerce / Distribution</option>
+              <option>Transport / Logistique</option>
+              <option>Services / Tertiaire</option>
+              <option>Hôtellerie / Restauration</option>
+              <option>Santé / Médical</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Taille</label>
+            <select id="profile-size">
+              <option value="">Sélectionner...</option>
+              <option>1-10 salariés</option>
+              <option>11-50 salariés</option>
+              <option>51-250 salariés</option>
+              <option>250+ salariés</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Profil de votre entreprise</h2>
+        <p class="text-muted">Sélectionnez le profil le plus proche de votre activité pour obtenir des recommandations adaptées.</p>
+        <div class="profile-grid" id="profile-types"></div>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-primary btn-lg" id="btn-start" disabled onclick="startDiagnostic()">
+          Commencer le diagnostic <i data-lucide="arrow-right"></i>
+        </button>
+        <p class="text-muted text-sm" id="start-hint">Sélectionnez un profil d'entreprise pour continuer</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== PAGE: DIAGNOSTIC ===== -->
+  <main id="page-diagnostic" class="page hidden">
+    <div class="container container-sm">
+      <h1>Autodiagnostic de vulnérabilité climatique</h1>
+      <p class="text-muted">Quelques questions simples pour repérer les points de vulnérabilité de votre entreprise.</p>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-labels">
+          <span id="progress-step">Étape 1 sur 5</span>
+          <span id="progress-pct">20%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-category-labels" id="progress-category-labels"></div>
+      </div>
+
+      <div id="category-header" class="category-header"></div>
+      <div id="questions-container"></div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-ghost" id="btn-prev" onclick="prevStep()" disabled>
+          <i data-lucide="arrow-left"></i> Précédent
+        </button>
+        <button class="btn btn-primary" id="btn-next" onclick="nextStep()" disabled>
+          Suivant <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== PAGE: RESULTATS ===== -->
+  <main id="page-resultats" class="page hidden">
+    <div class="container container-sm">
+      <div class="page-header">
+        <h1>Résultats du diagnostic</h1>
+        <button class="btn btn-outline btn-sm no-print" onclick="exportPdf('results-content','diagnostic-climat')">
+          <i data-lucide="file-down"></i> Exporter PDF
+        </button>
+      </div>
+      <div id="results-content"></div>
+      <div class="text-center no-print" style="margin-top:2rem">
+        <button class="btn btn-primary btn-lg" onclick="showPage('actions')">
+          Voir mon plan d'actions <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== PAGE: ACTIONS ===== -->
+  <main id="page-actions" class="page hidden">
+    <div class="container container-sm">
+      <div class="page-header">
+        <h1>Plan d'actions</h1>
+        <button class="btn btn-outline btn-sm no-print" onclick="exportPdf('actions-content','plan-actions-climat')">
+          <i data-lucide="file-down"></i> Exporter PDF
+        </button>
+      </div>
+      <div id="actions-content"></div>
+    </div>
+  </main>
+
+  <!-- ===== PAGE: URGENCE ===== -->
+  <main id="page-urgence" class="page hidden">
+    <div class="container">
+      <div class="urgence-header">
+        <i data-lucide="alert-triangle" class="icon-orange"></i>
+        <h1>Fiches réflexes d'urgence</h1>
+      </div>
+      <p class="text-muted">Gestes de prévention à adopter en cas d'alerte météo. Imprimez ces fiches et affichez-les dans vos locaux.</p>
+      <div id="urgence-content"></div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer" class="no-print">
+    <p>Prévention Climat — Outil d'accompagnement basé sur le guide AXA Prévention Climat</p>
+    <p>Ressources : georisques.gouv.fr · vigilance.meteofrance.fr · vigicrues.gouv.fr</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
 </html>
