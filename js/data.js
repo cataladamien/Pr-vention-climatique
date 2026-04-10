@@ -1,5 +1,5 @@
 /* Données du guide AXA Prévention Climat – ne pas modifier manuellement */
-const GUIDE_DATA = {
+var GUIDE_DATA = {
   diagnostic: {
     title: "Autodiagnostic de vulnérabilité climatique",
     description: "Quelques questions simples pour repérer les points de vulnérabilité de votre entreprise.",
@@ -114,7 +114,7 @@ const GUIDE_DATA = {
   ]
 };
 
-const PROFILE_TYPES = [
+var PROFILE_TYPES = [
   { id: "flux", label: "Flux & logistique", description: "Livraisons, multi-sites, transport", icon: "truck" },
   { id: "stocks", label: "Stocks sensibles", description: "Matériel, produits chimiques, denrées", icon: "package" },
   { id: "bati", label: "Bâti & construction", description: "Locaux, entrepôts, chantiers", icon: "building" }
