@@ -4,7 +4,469 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prévention Climat — Diagnostic de vulnérabilité</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <style>
+/* ===== VARIABLES ===== */
+:root {
+  --primary: #003366;
+  --primary-light: #004d99;
+  --primary-dark: #002244;
+  --accent-orange: #f59e0b;
+  --accent-green: #22c55e;
+  --danger: #ef4444;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  line-height: 1.6;
+}
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+input, select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  background: #fff;
+  transition: border-color .2s, box-shadow .2s;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,51,102,.12);
+}
+
+/* ===== UTILITIES ===== */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.text-muted { color: var(--gray-400); }
+.text-sm { font-size: 0.875rem; }
+.container { max-width: 64rem; margin: 0 auto; padding: 2rem 1rem; }
+.container-sm { max-width: 48rem; }
+.page { min-height: calc(100vh - 60px - 80px); }
+.icon-orange { color: var(--accent-orange); }
+
+@media print { .no-print { display: none !important; } }
+
+/* ===== HEADER ===== */
+#header {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.logo svg { width: 28px; height: 28px; }
+.menu-toggle { display: none; color: #fff; padding: 0.25rem; }
+.menu-toggle svg { width: 24px; height: 24px; }
+#main-nav { display: flex; gap: 0.25rem; }
+#mobile-nav {
+  padding: 0.5rem 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-top: 1px solid rgba(255,255,255,.2);
+}
+.nav-link {
+  color: rgba(255,255,255,.8);
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background .2s, color .2s;
+}
+.nav-link:hover, .nav-link.active {
+  color: #fff;
+  background: rgba(255,255,255,.18);
+}
+
+@media (max-width: 640px) {
+  .menu-toggle { display: block; }
+  #main-nav { display: none; }
+  .logo span { display: none; }
+}
+@media (min-width: 641px) {
+  #mobile-nav { display: none !important; }
+}
+
+/* ===== FOOTER ===== */
+#footer {
+  background: var(--primary-dark);
+  color: rgba(255,255,255,.6);
+  text-align: center;
+  font-size: 0.75rem;
+  padding: 1rem;
+  margin-top: auto;
+}
+#footer p + p { margin-top: 0.25rem; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all .2s;
+}
+.btn svg { width: 18px; height: 18px; }
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,51,102,.25);
+}
+.btn-primary:hover { background: var(--primary-light); }
+.btn-primary:disabled { background: var(--gray-300); color: var(--gray-400); box-shadow: none; cursor: not-allowed; }
+.btn-outline {
+  border: 1px solid rgba(0,51,102,.3);
+  color: var(--primary);
+}
+.btn-outline:hover { background: rgba(0,51,102,.05); }
+.btn-ghost { color: var(--primary); }
+.btn-ghost:hover { background: rgba(0,51,102,.05); }
+.btn-ghost:disabled { color: var(--gray-300); cursor: not-allowed; }
+.btn-lg { padding: 0.875rem 2rem; font-size: 1.125rem; }
+.btn-sm { padding: 0.375rem 0.875rem; font-size: 0.8125rem; }
+
+/* ===== CARD ===== */
+.card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+.card h2 {
+  color: var(--primary);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== HERO ===== */
+.hero { text-align: center; margin-bottom: 2.5rem; }
+.hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: rgba(0,51,102,.08);
+  margin-bottom: 1rem;
+}
+.hero-icon svg { width: 2rem; height: 2rem; color: var(--primary); }
+.hero h1 { color: var(--primary); font-size: 2rem; margin-bottom: 0.75rem; }
+.hero-sub { color: var(--gray-600); font-size: 1.125rem; max-width: 36rem; margin: 0 auto; }
+
+/* ===== BANNER ===== */
+.banner {
+  background: rgba(0,51,102,.04);
+  border: 1px solid rgba(0,51,102,.15);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.banner p { color: var(--primary); }
+.banner-actions { display: flex; gap: 0.5rem; }
+
+/* ===== FORMS ===== */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--gray-700); margin-bottom: 0.25rem; }
+@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+
+/* ===== PROFILE SELECTION ===== */
+.profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 0.75rem; }
+.profile-card {
+  padding: 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  transition: all .2s;
+  cursor: pointer;
+  background: #fff;
+}
+.profile-card:hover { border-color: rgba(0,51,102,.3); background: var(--gray-50); }
+.profile-card.selected { border-color: var(--primary); background: rgba(0,51,102,.04); }
+.profile-card svg { width: 24px; height: 24px; margin-bottom: 0.5rem; color: var(--gray-400); }
+.profile-card.selected svg { color: var(--primary); }
+.profile-card .pc-label { font-weight: 600; font-size: 0.875rem; color: var(--gray-700); }
+.profile-card.selected .pc-label { color: var(--primary); }
+.profile-card .pc-desc { font-size: 0.75rem; color: var(--gray-400); margin-top: 0.25rem; }
+@media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
+
+/* ===== PROGRESS ===== */
+.progress-bar-wrap { margin-bottom: 2rem; }
+.progress-labels { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; }
+.progress-labels span:first-child { font-weight: 600; color: var(--primary); }
+.progress-labels span:last-child { color: var(--gray-400); }
+.progress-bar { width: 100%; background: var(--gray-200); border-radius: 999px; height: 0.625rem; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); border-radius: 999px; transition: width .5s; }
+.progress-category-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; }
+.progress-category-labels span { font-size: 0.7rem; color: var(--gray-400); }
+.progress-category-labels span.active { color: var(--primary); font-weight: 600; }
+
+/* ===== DIAGNOSTIC ===== */
+.category-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.category-header .cat-icon {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: var(--radius-sm);
+  background: rgba(0,51,102,.08);
+  display: flex; align-items: center; justify-content: center;
+}
+.category-header .cat-icon svg { width: 20px; height: 20px; color: var(--primary); }
+.category-header h2 { color: var(--primary); font-size: 1.25rem; }
+
+.question-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.75rem;
+}
+.q-number {
+  flex-shrink: 0;
+  width: 1.75rem; height: 1.75rem;
+  border-radius: 50%;
+  background: rgba(0,51,102,.08);
+  color: var(--primary);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.q-content { flex: 1; }
+.q-text { font-weight: 500; color: var(--gray-800); margin-bottom: 0.75rem; font-size: 0.9375rem; }
+.q-answers { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.answer-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  background: #fff;
+  transition: all .2s;
+}
+.answer-btn:hover { border-color: var(--gray-300); }
+.answer-btn.selected-oui { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
+.answer-btn.selected-non { background: var(--danger); color: #fff; border-color: var(--danger); }
+.answer-btn.selected-nsp { background: var(--accent-orange); color: #fff; border-color: var(--accent-orange); }
+
+.why-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: rgba(0,51,102,.6);
+  transition: color .2s;
+}
+.why-toggle:hover { color: var(--primary); }
+.why-toggle svg { width: 14px; height: 14px; }
+.why-box {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+/* ===== RESULTS ===== */
+.page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+.page-header h1 { color: var(--primary); }
+
+.risk-badge {
+  display: inline-block;
+  padding: 0.375rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.gauge-wrap { display: flex; justify-content: center; margin: 1.5rem 0; }
+.gauge-svg { width: 160px; height: 160px; }
+.gauge-center { font-size: 1.875rem; font-weight: 700; }
+.gauge-label { font-size: 0.75rem; fill: var(--gray-400); }
+
+.cat-score-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; }
+.cat-score-icon {
+  width: 2rem; height: 2rem;
+  border-radius: var(--radius-sm);
+  background: rgba(0,51,102,.08);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cat-score-icon svg { width: 16px; height: 16px; color: var(--primary); }
+.cat-score-info { flex: 1; min-width: 0; }
+.cat-score-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; }
+.cat-score-name { font-size: 0.875rem; font-weight: 500; color: var(--gray-700); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cat-score-val { font-size: 0.875rem; font-weight: 600; margin-left: 0.5rem; }
+.cat-bar { width: 100%; height: 0.5rem; background: var(--gray-200); border-radius: 999px; overflow: hidden; }
+.cat-bar-fill { height: 100%; border-radius: 999px; transition: width .7s; }
+
+.vigilance-item { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.875rem; margin-bottom: 0.5rem; }
+.vigilance-dot {
+  flex-shrink: 0;
+  width: 1.25rem; height: 1.25rem;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 0.125rem;
+}
+
+/* ===== ACTIONS ===== */
+.actions-progress { margin-bottom: 1.5rem; }
+.actions-progress-header { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem; }
+.actions-progress-header span:first-child { font-weight: 500; color: var(--gray-700); }
+.actions-progress-header span:last-child { font-weight: 600; color: var(--primary); }
+.actions-bar { width: 100%; height: 0.75rem; background: var(--gray-200); border-radius: 999px; overflow: hidden; }
+.actions-bar-fill { height: 100%; background: var(--accent-green); border-radius: 999px; transition: width .5s; }
+
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all .2s;
+  background: #fff;
+}
+.action-item:hover { border-color: rgba(0,51,102,.3); }
+.action-item.done { background: #f0fdf4; border-color: #bbf7d0; }
+.action-check {
+  flex-shrink: 0;
+  width: 1.25rem; height: 1.25rem;
+  border: 2px solid var(--gray-300);
+  border-radius: 0.25rem;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 0.125rem;
+  transition: all .2s;
+}
+.action-item.done .action-check { background: var(--accent-green); border-color: var(--accent-green); }
+.action-check svg { width: 12px; height: 12px; color: #fff; }
+.action-text { font-size: 0.875rem; color: var(--gray-700); }
+.action-item.done .action-text { color: var(--gray-400); text-decoration: line-through; }
+
+.section-label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.section-label svg { width: 16px; height: 16px; }
+.section-label span { font-size: 0.875rem; font-weight: 600; }
+
+.question-actions-block { margin-bottom: 1.5rem; }
+.question-actions-cat { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--gray-400); font-weight: 500; margin-bottom: 0.25rem; }
+.question-actions-cat svg { width: 14px; height: 14px; }
+.question-actions-text { font-size: 0.875rem; font-weight: 500; color: var(--gray-700); margin-bottom: 0.5rem; }
+
+.levier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.levier-card { padding: 0.75rem; background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: var(--radius-sm); }
+.levier-card .lev-title { font-size: 0.875rem; font-weight: 600; color: var(--primary); margin-bottom: 0.25rem; }
+.levier-card .lev-arg { font-size: 0.75rem; color: var(--gray-600); line-height: 1.5; }
+@media (max-width: 640px) { .levier-grid { grid-template-columns: 1fr; } }
+
+/* ===== URGENCE ===== */
+.urgence-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.urgence-header svg { width: 28px; height: 28px; }
+.urgence-header h1 { color: var(--primary); }
+
+.urgence-card { border-radius: var(--radius); border: 2px solid; padding: 1.5rem; margin-bottom: 1.5rem; }
+.urgence-card.peril-wind { background: #f8fafc; border-color: #cbd5e1; }
+.urgence-card.peril-droplets { background: #eff6ff; border-color: #93c5fd; }
+.urgence-card.peril-thermometer-sun { background: #fff7ed; border-color: #fdba74; }
+
+.urgence-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+.urgence-icon {
+  width: 3rem; height: 3rem;
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+}
+.urgence-icon svg { width: 24px; height: 24px; }
+.peril-wind .urgence-icon { background: #e2e8f0; color: #475569; }
+.peril-droplets .urgence-icon { background: #dbeafe; color: #2563eb; }
+.peril-thermometer-sun .urgence-icon { background: #fed7aa; color: #ea580c; }
+.urgence-card-header h2 { font-size: 1.25rem; }
+.peril-wind .urgence-card-header h2 { color: #475569; }
+.peril-droplets .urgence-card-header h2 { color: #2563eb; }
+.peril-thermometer-sun .urgence-card-header h2 { color: #ea580c; }
+
+.urgence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 640px) { .urgence-grid { grid-template-columns: 1fr; } }
+.urgence-section { background: rgba(255,255,255,.8); border-radius: var(--radius-sm); padding: 1rem; }
+.urgence-section-title { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.875rem; font-weight: 600; color: var(--gray-700); }
+.urgence-section-title svg { width: 16px; height: 16px; }
+.urgence-list { list-style: none; }
+.urgence-list li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem; }
+.urgence-list li::before {
+  content: '';
+  flex-shrink: 0;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-top: 0.5rem;
+}
+.peril-wind .urgence-list li::before { background: #475569; }
+.peril-droplets .urgence-list li::before { background: #2563eb; }
+.peril-thermometer-sun .urgence-list li::before { background: #ea580c; }
+
+/* ===== ALL-GREEN ===== */
+.all-green { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius); padding: 1.5rem; text-align: center; color: #15803d; font-weight: 500; }
+
+</style>
 </head>
 <body>
 
@@ -187,7 +649,588 @@
     <p>Ressources : georisques.gouv.fr · vigilance.meteofrance.fr · vigicrues.gouv.fr</p>
   </footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
+  <script>
+/* Données du guide AXA Prévention Climat – ne pas modifier manuellement */
+var GUIDE_DATA = {
+  diagnostic: {
+    title: "Autodiagnostic de vulnérabilité climatique",
+    description: "Quelques questions simples pour repérer les points de vulnérabilité de votre entreprise.",
+    scoring: {
+      majorite_oui: { level: "faible", label: "Risque faible", message: "Votre entreprise est globalement bien protégée. Continuez à maintenir vos dispositifs de prévention." },
+      mixte: { level: "modere", label: "Risque modéré", message: "Certains points de vulnérabilité méritent votre attention. Un plan d'actions ciblé est recommandé." },
+      majorite_non: { level: "eleve", label: "Risque élevé", message: "Un diagnostic approfondi avec un bureau d'études est fortement recommandé (ex : CEREG, Mayane, Socotec)." }
+    },
+    categories: [
+      {
+        id: "exposition", label: "Exposition géographique", icon: "map-pin",
+        questions: [
+          { id: "q1", text: "Vos locaux sont-ils situés hors d'une zone inondable ?", why: "L'inondabilité peut être vérifiée sur Géorisques. Une zone inondable est susceptible d'être envahie par l'eau lors d'une crue, de ruissellements, par remontée de nappe ou submersion marine." },
+          { id: "q2", text: "Votre département est-il relativement peu concerné par la Vigilance Météo-France orange ou rouge (tempête, grêle) ?", why: "Les alertes orange/rouge signalent des événements climatiques violents ; connaître leur fréquence aide à anticiper les protections." },
+          { id: "q3", text: "Avez-vous effectué vos obligations légales de débroussaillage régulier (incendie) ?", why: "Le débroussaillage diminue le risque incendie et freine la propagation et l'intensité des feux de forêt." },
+          { id: "q4", text: "Disposez-vous de protections physiques (batardeaux, systèmes de drainage, clapets anti-retour…) ?", why: "Ces équipements limitent l'entrée d'eau dans les locaux et protègent les biens." }
+        ]
+      },
+      {
+        id: "biens", label: "Protection des biens", icon: "shield",
+        questions: [
+          { id: "q5", text: "Votre matériel et vos stocks sont-ils protégés des intempéries et stockés hors zone sensible ?", why: "Un stockage au-dessus du sol évite la corruption des denrées, la détérioration du matériel électrique et la propagation de produits chimiques." },
+          { id: "q6", text: "Les actifs de valeur sont-ils situés en intérieur, ou l'activité se pratique-t-elle beaucoup en intérieur ?", why: "La grêle peut fortement endommager les parcs automobiles ou activités viticoles. Les vagues de chaleur peuvent imposer une interruption d'activité." },
+          { id: "q7", text: "Vos données sont-elles sauvegardées automatiquement chez un prestataire externe ?", why: "Les inondations ou vagues de chaleur peuvent endommager les serveurs. Stocker les données à plusieurs endroits favorise la continuité." }
+        ]
+      },
+      {
+        id: "humain", label: "Ressources humaines", icon: "users",
+        questions: [
+          { id: "q8", text: "Travaillez-vous dans un secteur peu exposé aux vagues de chaleur et intempéries ?", why: "Les secteurs agricole, industriel et bâtiment sont particulièrement exposés aux vagues de chaleur pouvant affecter la santé des salariés." },
+          { id: "q9", text: "Vos salariés savent-ils comment réagir en cas d'incident majeur (inondation, incendie, coupure d'énergie) ?", why: "La réaction rapide du personnel limite les dommages et préserve la sécurité humaine." },
+          { id: "q10", text: "Disposez-vous d'un plan de continuité d'activité en cas d'interruption prolongée liée à un événement climatique ?", why: "Un PCA organise la reprise rapide de l'activité après un sinistre pour limiter les pertes d'exploitation." }
+        ]
+      },
+      {
+        id: "dependances", label: "Dépendances externes", icon: "link",
+        questions: [
+          { id: "q11", text: "Disposez-vous d'alternatives (fournisseurs, sites de production, stockage de secours) ?", why: "La diversification réduit la dépendance et la vulnérabilité à un sinistre localisé." },
+          { id: "q12", text: "Avez-vous identifié vos clients prioritaires en cas de rupture d'activité ?", why: "Prioriser ses clients et projets évite de mettre en péril les relations commerciales les plus importantes." },
+          { id: "q13", text: "Vos installations sont-elles indépendantes de l'eau pour des processus critiques (sécheresse) ?", why: "Évaluer sa dépendance à l'eau permet de prévoir une pénurie et des solutions adaptées." }
+        ]
+      },
+      {
+        id: "conformite", label: "Conformité et gestion du risque", icon: "clipboard-check",
+        questions: [
+          { id: "q14", text: "Connaissez-vous les dispositifs locaux liés aux risques naturels (PPRN, PAPI, PCS) ?", why: "Ces dispositifs locaux indiquent les risques du territoire et les obligations des entreprises en prévention." },
+          { id: "q15", text: "Votre document unique d'évaluation des risques (DUERP) intègre-t-il les risques climatiques ?", why: "Le DUERP est obligatoire dès le premier salarié. L'amende peut atteindre 7 500 € pour une personne morale." }
+        ]
+      }
+    ]
+  },
+  plan_actions: {
+    par_profil: [
+      {
+        id: "flux", label: "Entreprise avec beaucoup de flux (logistique, livraisons, sites…)",
+        prevention: ["Définir le bon interlocuteur et le bon site pour la réception des alertes météo", "Surélever les quais de chargement", "Installer les zones de stationnement hors zone inondable", "Investir dans des équipements de protection (batardeaux, clapets anti-retour…)"],
+        continuite: ["Prévoir un plan de télétravail d'urgence et un canal de communication", "Identifier des entrepôts partenaires", "Préparer des itinéraires alternatifs"]
+      },
+      {
+        id: "stocks", label: "Entreprise avec des stocks de matériel sensible",
+        prevention: ["Stocker le matériel et produits sensibles en hauteur, hors sous-sol, dans des contenants étanches", "Investir dans des équipements de protection (batardeaux, clapets anti-retour…)", "Sécuriser les réseaux électriques (tableau électrique dans armoire étanche surélevée)"],
+        continuite: ["Maintenir un inventaire numérique sauvegardé sur le cloud", "Construire un protocole d'évacuation des stocks sensibles et former les équipes"]
+      },
+      {
+        id: "bati", label: "Construction / adaptation du bâti",
+        prevention: ["Choisir un terrain adapté en consultant le PPRI, éviter les zones proches de l'eau", "Surélever les planchers", "Créer des pentes naturelles, entretenir les canaux", "Surélever les prises électriques au-dessus du sol"],
+        continuite: ["Définir des zones refuge et des entrepôts alternatifs avec signalétique claire", "Prévoir des alimentations de secours (groupes électrogènes, onduleurs)"]
+      }
+    ],
+    par_question: {
+      q1: { non: ["Vérifier votre exposition sur Géorisques", "Investir dans des protections physiques (batardeaux, clapets anti-retour)", "Surélever les équipements sensibles au-dessus du niveau de crue", "Consulter le PPRI de votre commune"] },
+      q2: { non: ["S'inscrire aux alertes Vigilance Météo-France", "Mettre en place un protocole d'alerte interne", "Préparer des protections physiques mobilisables rapidement"] },
+      q3: { non: ["Réaliser le débroussaillage réglementaire autour de vos locaux", "Vérifier les obligations légales de votre commune en matière d'incendie"] },
+      q4: { non: ["Installer des batardeaux aux entrées vulnérables", "Mettre en place des clapets anti-retour sur les canalisations", "Vérifier et entretenir les systèmes de drainage existants"] },
+      q5: { non: ["Déplacer les stocks hors sous-sol et hors zones inondables", "Utiliser des contenants étanches pour les produits sensibles", "Stocker les produits chimiques en hauteur pour éviter la propagation"] },
+      q6: { non: ["Prévoir des abris ou garages couverts pour le parc automobile", "Adapter les horaires de travail en cas de forte chaleur", "Installer des filets anti-grêle si activité viticole ou agricole"] },
+      q7: { non: ["Mettre en place une sauvegarde automatique chez un prestataire externe", "Stocker les données à plusieurs endroits géographiquement distincts", "Tester régulièrement la restauration des sauvegardes"] },
+      q8: { non: ["Prévoir des zones ventilées et de repos pour les salariés", "Adapter les horaires de travail (début tôt le matin)", "Contrôler et maintenir les systèmes de climatisation"] },
+      q9: { non: ["Former les salariés aux gestes d'urgence (inondation, incendie, coupure d'énergie)", "Afficher les consignes de sécurité dans les locaux", "Organiser des exercices d'évacuation réguliers"] },
+      q10: { non: ["Élaborer un Plan de Continuité d'Activité (PCA)", "Identifier les activités critiques à maintenir en priorité", "Prévoir un dispositif de télétravail d'urgence"] },
+      q11: { non: ["Identifier des fournisseurs alternatifs", "Repérer des sites de production ou de stockage de secours", "Contractualiser des accords de backup avec des partenaires"] },
+      q12: { non: ["Lister et prioriser vos clients stratégiques", "Définir un protocole de communication de crise vers les clients", "Préparer des solutions dégradées pour maintenir le service minimum"] },
+      q13: { non: ["Évaluer votre dépendance à l'eau pour les processus critiques", "Identifier des solutions de remplacement en cas de pénurie", "Stocker une réserve d'eau pour les processus essentiels"] },
+      q14: { non: ["Consulter le PPRN de votre commune sur Géorisques", "Se renseigner sur le PCS (Plan Communal de Sauvegarde) local", "Vérifier si votre zone est couverte par un PAPI"] },
+      q15: { non: ["Intégrer les risques climatiques dans votre DUERP", "Mettre à jour le DUERP annuellement (obligation légale)", "Documenter les mesures de prévention mises en place"] }
+    }
+  },
+  urgence: {
+    tempete: {
+      label: "Tempête", icon: "wind",
+      jours_avant: ["Vérifier l'état des cheminements d'écoulement des eaux sur le site", "Identifier le matériel sensible et prévoir un plan pour le mettre à l'abri", "Tailler les arbres proches du site"],
+      heures_avant: ["Fermer l'ensemble des ouvertures (portes, fenêtres, hangars, volets)", "Mettre à l'abri tout matériel ou équipement extérieur", "Indiquer aux salariés de ne pas utiliser leurs véhicules et de rester chez eux"]
+    },
+    inondation: {
+      label: "Inondation", icon: "droplets",
+      jours_avant: ["S'assurer du bon fonctionnement des clapets anti-retour et batardeaux", "Surélever les équipements et stocks sensibles", "Stationner les véhicules en point haut", "Anticiper un plan d'évacuation et de télétravail"],
+      heures_avant: ["Respecter les consignes de sécurité des autorités", "Indiquer aux collaborateurs absents de ne pas se rendre sur site", "Obturer les ouvertures avec batardeaux, sacs de sable ou barrières étanches"]
+    },
+    canicule: {
+      label: "Vague de chaleur", icon: "thermometer-sun",
+      jours_avant: ["Prévoir des zones ventilées et de repos pour les salariés", "Vérifier le bon fonctionnement des systèmes de climatisation et d'hydratation", "Adapter les horaires (travail tôt le matin)", "Contrôler et maintenir les systèmes de réfrigération"],
+      heures_avant: ["Informer les salariés des risques spécifiques liés à la chaleur", "Augmenter la fréquence des pauses de récupération", "Distribuer eau et ventilateurs portatifs", "Surveiller les signes de coup de chaleur du personnel"]
+    }
+  },
+  leviers_discours: [
+    { id: "economique", label: "Levier économique", icon: "euro", argument: "1 € investi dans l'adaptation rapporte jusqu'à 10 € de bénéfices en 10 ans. Le risque inondation devrait peser 50 milliards d'euros sur 2020-2050, soit +81% vs la période passée." },
+    { id: "reglementaire", label: "Levier réglementaire", icon: "scale", argument: "Obligation légale du DUERP dès le premier salarié (amende jusqu'à 7 500 €). Le non-respect des mesures de prévention contractuelles peut impacter l'indemnisation." },
+    { id: "strategique", label: "Levier stratégique", icon: "target", argument: "Une semaine d'arrêt peut faire perdre du chiffre d'affaires et des clients. La prévention est un levier de continuité d'activité." },
+    { id: "responsabilite", label: "Levier responsabilité", icon: "heart-handshake", argument: "Vos équipes vous font confiance, vous êtes un leader responsable. Et si ça vous arrivait demain ?" },
+    { id: "social", label: "Levier social et managérial", icon: "users", argument: "Une entreprise où les collaborateurs se sentent protégés fidélise mieux. La prévention est un argument de recrutement." },
+    { id: "reputationnel", label: "Levier réputationnel", icon: "award", argument: "Investir en prévention valorise la marque employeur, renforce la confiance des clients et partenaires." }
+  ]
+};
+
+var PROFILE_TYPES = [
+  { id: "flux", label: "Flux & logistique", description: "Livraisons, multi-sites, transport", icon: "truck" },
+  { id: "stocks", label: "Stocks sensibles", description: "Matériel, produits chimiques, denrées", icon: "package" },
+  { id: "bati", label: "Bâti & construction", description: "Locaux, entrepôts, chantiers", icon: "building" }
+];
+
+
+/* ===== INLINE SVG ICONS ===== */
+var ICONS = {
+  'map-pin': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+  'shield': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>',
+  'users': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  'link': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  'clipboard-check': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>',
+  'truck': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>',
+  'package': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
+  'building': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>',
+  'wind': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>',
+  'droplets': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 14.06c1.74 0 3.14-1.44 3.14-3.19 0-.91-.45-1.78-1.34-2.51-.9-.74-1.47-1.63-1.8-2.86-.34 1.23-.91 2.12-1.8 2.86-.9.73-1.34 1.6-1.34 2.51 0 1.75 1.4 3.19 3.14 3.19z"/><path d="M17 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S17.29 6.75 17 5.3c-.29 1.45-1.14 2.84-2.29 3.76S13 11.1 13 12.25c0 2.22 1.8 4.05 4 4.05z"/></svg>',
+  'thermometer-sun': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9a4 4 0 0 0-2 7.5"/><path d="M12 3v2"/><path d="m6.6 18.4-1.4 1.4"/><path d="M20 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/><path d="M4 13H2"/><path d="M6.34 7.34 4.93 5.93"/></svg>',
+  'help-circle': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+  'check': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  'calendar': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>',
+  'clock': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+};
+
+function icon(name, size) {
+  const svg = ICONS[name] || '';
+  if (size && svg) return svg.replace(/width="\d+"/, 'width="'+size+'"').replace(/height="\d+"/, 'height="'+size+'"');
+  return svg;
+}
+
+/* ===== STATE ===== */
+var LS_DIAG = 'prevention_climat_diagnostic';
+var LS_PROF = 'prevention_climat_profile';
+var LS_ACT  = 'prevention_climat_actions';
+
+let state = {
+  answers: {},
+  currentStep: 0,
+  completed: false,
+  profile: { name: '', location: '', sector: '', size: '', profileType: '' },
+  actionStatus: {}
+};
+
+function loadState() {
+  try {
+    const d = localStorage.getItem(LS_DIAG);
+    if (d) { const p = JSON.parse(d); Object.assign(state, p); }
+    const pr = localStorage.getItem(LS_PROF);
+    if (pr) state.profile = JSON.parse(pr);
+    const a = localStorage.getItem(LS_ACT);
+    if (a) state.actionStatus = JSON.parse(a);
+  } catch(e) { /* ignore */ }
+}
+
+function saveState() {
+  localStorage.setItem(LS_DIAG, JSON.stringify({ answers: state.answers, currentStep: state.currentStep, completed: state.completed }));
+  localStorage.setItem(LS_PROF, JSON.stringify(state.profile));
+  localStorage.setItem(LS_ACT, JSON.stringify(state.actionStatus));
+}
+
+/* ===== NAVIGATION ===== */
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.add('hidden'); });
+  document.getElementById('page-' + name).classList.remove('hidden');
+  document.querySelectorAll('.nav-link').forEach(function(l) {
+    l.classList.toggle('active', l.dataset.page === name);
+  });
+  document.getElementById('mobile-nav').classList.add('hidden');
+  document.getElementById('menu-icon-open').style.display = '';
+  document.getElementById('menu-icon-close').style.display = 'none';
+  window.scrollTo(0, 0);
+
+  if (name === 'accueil') renderAccueil();
+  if (name === 'diagnostic') renderDiagnostic();
+  if (name === 'resultats') renderResults();
+  if (name === 'actions') renderActions();
+  if (name === 'urgence') renderUrgence();
+}
+
+function toggleMenu() {
+  var mob = document.getElementById('mobile-nav');
+  var isOpen = mob.classList.contains('hidden');
+  mob.classList.toggle('hidden', !isOpen);
+  document.getElementById('menu-icon-open').style.display = isOpen ? 'none' : '';
+  document.getElementById('menu-icon-close').style.display = isOpen ? '' : 'none';
+}
+
+/* ===== ACCUEIL ===== */
+function renderAccueil() {
+  document.getElementById('profile-name').value = state.profile.name;
+  document.getElementById('profile-location').value = state.profile.location;
+  document.getElementById('profile-sector').value = state.profile.sector;
+  document.getElementById('profile-size').value = state.profile.size;
+
+  var hasDiag = Object.keys(state.answers).length > 0;
+  document.getElementById('existing-banner').classList.toggle('hidden', !hasDiag);
+
+  var grid = document.getElementById('profile-types');
+  grid.innerHTML = PROFILE_TYPES.map(function(pt) {
+    return '<button class="profile-card' + (state.profile.profileType === pt.id ? ' selected' : '') + '" data-profile="' + pt.id + '">' +
+      '<span class="pc-icon">' + icon(pt.icon) + '</span>' +
+      '<p class="pc-label">' + pt.label + '</p>' +
+      '<p class="pc-desc">' + pt.description + '</p>' +
+    '</button>';
+  }).join('');
+
+  grid.querySelectorAll('.profile-card').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      state.profile.profileType = btn.dataset.profile;
+      saveState();
+      renderAccueil();
+    });
+  });
+  updateStartButton();
+}
+
+function updateStartButton() {
+  var btn = document.getElementById('btn-start');
+  var hint = document.getElementById('start-hint');
+  var ready = state.profile.profileType !== '';
+  btn.disabled = !ready;
+  hint.style.display = ready ? 'none' : '';
+}
+
+function saveProfile() {
+  state.profile.name = document.getElementById('profile-name').value;
+  state.profile.location = document.getElementById('profile-location').value;
+  state.profile.sector = document.getElementById('profile-sector').value;
+  state.profile.size = document.getElementById('profile-size').value;
+  saveState();
+}
+
+function startDiagnostic() {
+  saveProfile();
+  showPage('diagnostic');
+}
+
+function resetAll() {
+  state.answers = {};
+  state.currentStep = 0;
+  state.completed = false;
+  state.actionStatus = {};
+  state.profile = { name: '', location: '', sector: '', size: '', profileType: '' };
+  localStorage.removeItem(LS_DIAG);
+  localStorage.removeItem(LS_PROF);
+  localStorage.removeItem(LS_ACT);
+  renderAccueil();
+}
+
+/* ===== DIAGNOSTIC ===== */
+function renderDiagnostic() {
+  var cats = GUIDE_DATA.diagnostic.categories;
+  var cat = cats[state.currentStep];
+  var pct = Math.round(((state.currentStep + 1) / cats.length) * 100);
+
+  document.getElementById('progress-step').textContent = 'Étape ' + (state.currentStep + 1) + ' sur ' + cats.length;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  document.getElementById('progress-category-labels').innerHTML = cats.map(function(c, i) {
+    return '<span class="' + (i <= state.currentStep ? 'active' : '') + '">' + c.label.split(' ')[0] + '</span>';
+  }).join('');
+
+  document.getElementById('category-header').innerHTML =
+    '<div class="cat-icon">' + icon(cat.icon) + '</div>' +
+    '<h2>' + cat.label + '</h2>';
+
+  var container = document.getElementById('questions-container');
+  container.innerHTML = cat.questions.map(function(q, i) {
+    return '<div class="question-card">' +
+      '<span class="q-number">' + (i + 1) + '</span>' +
+      '<div class="q-content">' +
+        '<p class="q-text">' + q.text + '</p>' +
+        '<div class="q-answers">' +
+          '<button class="answer-btn' + (state.answers[q.id] === 'oui' ? ' selected-oui' : '') + '" onclick="setAnswer(\'' + q.id + '\',\'oui\')">Oui</button>' +
+          '<button class="answer-btn' + (state.answers[q.id] === 'non' ? ' selected-non' : '') + '" onclick="setAnswer(\'' + q.id + '\',\'non\')">Non</button>' +
+          '<button class="answer-btn' + (state.answers[q.id] === 'ne_sais_pas' ? ' selected-nsp' : '') + '" onclick="setAnswer(\'' + q.id + '\',\'ne_sais_pas\')">Ne sais pas</button>' +
+        '</div>' +
+        '<button class="why-toggle" onclick="toggleWhy(\'' + q.id + '\')">' +
+          icon('help-circle') + ' Pourquoi c\'est important' +
+        '</button>' +
+        '<div class="why-box hidden" id="why-' + q.id + '">' + q.why + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('btn-prev').disabled = state.currentStep === 0;
+  updateNextButton();
+}
+
+function setAnswer(qId, value) {
+  state.answers[qId] = value;
+  saveState();
+  renderDiagnostic();
+}
+
+function toggleWhy(qId) {
+  document.getElementById('why-' + qId).classList.toggle('hidden');
+}
+
+function updateNextButton() {
+  var cat = GUIDE_DATA.diagnostic.categories[state.currentStep];
+  var allAnswered = cat.questions.every(function(q) { return state.answers[q.id]; });
+  var btn = document.getElementById('btn-next');
+  btn.disabled = !allAnswered;
+  var isLast = state.currentStep === GUIDE_DATA.diagnostic.categories.length - 1;
+  btn.innerHTML = isLast ? 'Voir les résultats &#x2714;' : 'Suivant &#x2192;';
+}
+
+function nextStep() {
+  var cats = GUIDE_DATA.diagnostic.categories;
+  if (state.currentStep === cats.length - 1) {
+    state.completed = true;
+    saveState();
+    showPage('resultats');
+  } else {
+    state.currentStep++;
+    saveState();
+    renderDiagnostic();
+    window.scrollTo(0, 0);
+  }
+}
+
+function prevStep() {
+  if (state.currentStep > 0) {
+    state.currentStep--;
+    saveState();
+    renderDiagnostic();
+    window.scrollTo(0, 0);
+  }
+}
+
+/* ===== SCORING ===== */
+function getRiskLevel(pct) {
+  if (pct >= 67) return 'faible';
+  if (pct >= 40) return 'modere';
+  return 'eleve';
+}
+
+function getRiskConfig(level) {
+  var configs = {
+    faible: { color: '#22c55e', bg: '#f0fdf4', border: '#bbf7d0', label: GUIDE_DATA.diagnostic.scoring.majorite_oui.label, message: GUIDE_DATA.diagnostic.scoring.majorite_oui.message },
+    modere: { color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', label: GUIDE_DATA.diagnostic.scoring.mixte.label, message: GUIDE_DATA.diagnostic.scoring.mixte.message },
+    eleve:  { color: '#ef4444', bg: '#fef2f2', border: '#fecaca', label: GUIDE_DATA.diagnostic.scoring.majorite_non.label, message: GUIDE_DATA.diagnostic.scoring.majorite_non.message }
+  };
+  return configs[level];
+}
+
+function calculateScores() {
+  var cats = GUIDE_DATA.diagnostic.categories;
+  var totalQ = cats.reduce(function(s, c) { return s + c.questions.length; }, 0);
+  var totalOui = Object.values(state.answers).filter(function(a) { return a === 'oui'; }).length;
+  var pct = totalQ > 0 ? Math.round((totalOui / totalQ) * 100) : 0;
+  var level = getRiskLevel(pct);
+
+  var catScores = cats.map(function(cat) {
+    var tot = cat.questions.length;
+    var oui = cat.questions.filter(function(q) { return state.answers[q.id] === 'oui'; }).length;
+    var p = tot > 0 ? Math.round((oui / tot) * 100) : 0;
+    return { id: cat.id, label: cat.label, icon: cat.icon, score: oui, total: tot, pct: p, level: getRiskLevel(p) };
+  });
+
+  return { score: totalOui, total: totalQ, pct: pct, level: level, catScores: catScores };
+}
+
+/* ===== RESULTS ===== */
+function renderResults() {
+  var container = document.getElementById('results-content');
+  if (Object.keys(state.answers).length === 0) {
+    container.innerHTML = '<div class="card text-center" style="padding:3rem"><h2 style="color:var(--gray-700)">Aucun diagnostic réalisé</h2><p class="text-muted" style="margin:1rem 0">Veuillez d\'abord compléter le diagnostic.</p><button class="btn btn-primary" onclick="showPage(\'diagnostic\')">Commencer le diagnostic</button></div>';
+    return;
+  }
+
+  var s = calculateScores();
+  var cfg = getRiskConfig(s.level);
+  var circ = 2 * Math.PI * 54;
+  var offset = circ - (s.pct / 100) * circ;
+
+  var html = '<div class="card text-center">' +
+    '<span class="risk-badge" style="background:' + cfg.bg + ';color:' + cfg.color + ';border:1px solid ' + cfg.border + '">' + cfg.label + '</span>' +
+    '<div class="gauge-wrap">' +
+      '<div style="position:relative;display:inline-block">' +
+        '<svg width="160" height="160" viewBox="0 0 120 120" style="transform:rotate(-90deg)">' +
+          '<circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" stroke-width="8"/>' +
+          '<circle cx="60" cy="60" r="54" fill="none" stroke="' + cfg.color + '" stroke-width="8" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '" style="transition:stroke-dashoffset 1s"/>' +
+        '</svg>' +
+        '<div style="position:absolute;top:0;left:0;width:160px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+          '<span class="gauge-center" style="color:' + cfg.color + '">' + s.score + '/' + s.total + '</span>' +
+          '<span style="font-size:0.75rem;color:var(--gray-400)">réponses positives</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<p class="text-muted" style="max-width:32rem;margin:1rem auto 0">' + cfg.message + '</p>' +
+  '</div>';
+
+  // Category scores
+  html += '<div class="card"><h2>Score par catégorie</h2>';
+  s.catScores.forEach(function(cs) {
+    var cc = getRiskConfig(cs.level);
+    html += '<div class="cat-score-row">' +
+      '<div class="cat-score-icon">' + icon(cs.icon) + '</div>' +
+      '<div class="cat-score-info">' +
+        '<div class="cat-score-header"><span class="cat-score-name">' + cs.label + '</span><span class="cat-score-val" style="color:' + cc.color + '">' + cs.score + '/' + cs.total + '</span></div>' +
+        '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + cs.pct + '%;background:' + cc.color + '"></div></div>' +
+      '</div></div>';
+  });
+  html += '</div>';
+
+  // Vigilance
+  html += '<div class="card"><h2>Points de vigilance</h2>';
+  var qMap = {};
+  GUIDE_DATA.diagnostic.categories.forEach(function(c) { c.questions.forEach(function(q) { qMap[q.id] = q.text; }); });
+  var hasVigilance = false;
+  Object.entries(state.answers).forEach(function(entry) {
+    var qId = entry[0], v = entry[1];
+    if (v === 'non' || v === 'ne_sais_pas') {
+      hasVigilance = true;
+      html += '<div class="vigilance-item"><span class="vigilance-dot" style="background:' + (v === 'non' ? 'var(--danger)' : 'var(--accent-orange)') + '">' + (v === 'non' ? '!' : '?') + '</span><span style="color:var(--gray-600)">' + (qMap[qId] || qId) + '</span></div>';
+    }
+  });
+  if (!hasVigilance) html += '<p class="text-muted">Aucun point de vigilance.</p>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+/* ===== ACTIONS ===== */
+function renderActions() {
+  var container = document.getElementById('actions-content');
+  if (Object.keys(state.answers).length === 0) {
+    container.innerHTML = '<div class="card text-center" style="padding:3rem"><h2 style="color:var(--gray-700)">Aucun diagnostic réalisé</h2><p class="text-muted" style="margin:1rem 0">Veuillez d\'abord compléter le diagnostic.</p><button class="btn btn-primary" onclick="showPage(\'diagnostic\')">Commencer le diagnostic</button></div>';
+    return;
+  }
+
+  var questionActions = [];
+  GUIDE_DATA.diagnostic.categories.forEach(function(cat) {
+    cat.questions.forEach(function(q) {
+      var ans = state.answers[q.id];
+      if (ans === 'non' || ans === 'ne_sais_pas') {
+        var actions = (GUIDE_DATA.plan_actions.par_question[q.id] || {}).non || [];
+        if (actions.length) questionActions.push({ question: q, catId: cat.id, catLabel: cat.label, catIcon: cat.icon, actions: actions });
+      }
+    });
+  });
+
+  var selectedProfile = GUIDE_DATA.plan_actions.par_profil.find(function(p) { return p.id === state.profile.profileType; });
+
+  var totalActions = questionActions.reduce(function(s, qa) { return s + qa.actions.length; }, 0);
+  if (selectedProfile) totalActions += selectedProfile.prevention.length + selectedProfile.continuite.length;
+  var completedActions = Object.values(state.actionStatus).filter(Boolean).length;
+  var progressPct = totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
+
+  var html = '<div class="card"><div class="actions-progress-header"><span>Progression</span><span>' + completedActions + '/' + totalActions + ' — ' + progressPct + '%</span></div><div class="actions-bar"><div class="actions-bar-fill" style="width:' + progressPct + '%"></div></div></div>';
+
+  if (selectedProfile) {
+    html += '<div class="card"><h2>Recommandations pour votre profil</h2><p class="text-muted text-sm" style="margin-bottom:1rem">' + selectedProfile.label + '</p>';
+    html += '<div class="section-label"><span style="color:var(--primary)">&#x1F6E1;&#xFE0F; Prévention</span></div>';
+    selectedProfile.prevention.forEach(function(a, i) { html += actionItem('profile_' + selectedProfile.id + '_prev_' + i, a); });
+    html += '<div class="section-label" style="margin-top:1.25rem"><span style="color:var(--accent-orange)">&#x1F504; Continuité d\'activité</span></div>';
+    selectedProfile.continuite.forEach(function(a, i) { html += actionItem('profile_' + selectedProfile.id + '_cont_' + i, a); });
+    html += '</div>';
+  }
+
+  if (questionActions.length > 0) {
+    html += '<div class="card"><h2>Actions par point de vigilance</h2>';
+    questionActions.forEach(function(qa) {
+      html += '<div class="question-actions-block">' +
+        '<div class="question-actions-cat">' + icon(qa.catIcon, 14) + ' ' + qa.catLabel + '</div>' +
+        '<p class="question-actions-text">' + qa.question.text + '</p>';
+      qa.actions.forEach(function(a, i) { html += actionItem('q_' + qa.question.id + '_' + i, a); });
+      html += '</div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="all-green">Toutes les réponses sont positives. Continuez à maintenir vos dispositifs de prévention !</div>';
+  }
+
+  // Leviers
+  html += '<div class="card"><div class="section-label"><span style="color:var(--primary)">&#x1F4A1; Arguments clés</span></div><div class="levier-grid">';
+  GUIDE_DATA.leviers_discours.forEach(function(l) {
+    html += '<div class="levier-card"><p class="lev-title">' + l.label + '</p><p class="lev-arg">' + l.argument + '</p></div>';
+  });
+  html += '</div></div>';
+
+  container.innerHTML = html;
+  container.querySelectorAll('.action-item').forEach(function(el) {
+    el.addEventListener('click', function() {
+      state.actionStatus[el.dataset.key] = !state.actionStatus[el.dataset.key];
+      saveState();
+      renderActions();
+    });
+  });
+}
+
+function actionItem(key, text) {
+  var done = !!state.actionStatus[key];
+  return '<div class="action-item' + (done ? ' done' : '') + '" data-key="' + key + '">' +
+    '<div class="action-check">' + (done ? icon('check') : '') + '</div>' +
+    '<span class="action-text">' + text + '</span>' +
+  '</div>';
+}
+
+/* ===== URGENCE ===== */
+function renderUrgence() {
+  var container = document.getElementById('urgence-content');
+  var perils = Object.values(GUIDE_DATA.urgence);
+  container.innerHTML = perils.map(function(p) {
+    return '<div class="urgence-card peril-' + p.icon + '">' +
+      '<div class="urgence-card-header">' +
+        '<div class="urgence-icon">' + icon(p.icon) + '</div>' +
+        '<h2>' + p.label + '</h2>' +
+      '</div>' +
+      '<div class="urgence-grid">' +
+        '<div class="urgence-section">' +
+          '<div class="urgence-section-title">' + icon('calendar') + ' Quelques jours avant</div>' +
+          '<ul class="urgence-list">' + p.jours_avant.map(function(a) { return '<li>' + a + '</li>'; }).join('') + '</ul>' +
+        '</div>' +
+        '<div class="urgence-section">' +
+          '<div class="urgence-section-title">' + icon('clock') + ' Quelques heures avant</div>' +
+          '<ul class="urgence-list">' + p.heures_avant.map(function(a) { return '<li>' + a + '</li>'; }).join('') + '</ul>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ===== PDF EXPORT ===== */
+function exportPdf(elementId, filename) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  if (typeof html2pdf === 'undefined') {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    script.onload = function() { doExport(el, filename); };
+    script.onerror = function() { alert('Export PDF nécessite une connexion internet. Vous pouvez utiliser Ctrl+P pour imprimer en PDF.'); };
+    document.head.appendChild(script);
+  } else {
+    doExport(el, filename);
+  }
+}
+
+function doExport(el, filename) {
+  html2pdf().set({
+    margin: 10,
+    filename: filename + '.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  }).from(el).save();
+}
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded', function() {
+  loadState();
+  renderAccueil();
+
+  ['profile-name','profile-location','profile-sector','profile-size'].forEach(function(id) {
+    var el = document.getElementById(id);
+    el.addEventListener('change', saveProfile);
+    el.addEventListener('input', saveProfile);
+  });
+});
+
+</script>
 </body>
 </html>
