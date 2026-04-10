@@ -1,11 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, FileDown, AlertTriangle } from 'lucide-react';
+import data from '../../../data/prevention-climat.json';
 import type { DiagnosticState } from '../../types';
 import { calculateGlobalScore } from '../../utils/scoring';
 import { exportToPdf } from '../../utils/pdf';
 import ScoreGauge from './ScoreGauge';
 import CategoryScoreBar from './CategoryScore';
 import RiskBadge from './RiskBadge';
+
+const questionTexts: Record<string, string> = {};
+data.diagnostic.categories.forEach(cat => {
+  cat.questions.forEach(q => {
+    questionTexts[q.id] = q.text;
+  });
+});
 
 interface ResultsPageProps {
   diagnostic: DiagnosticState;
@@ -71,12 +79,14 @@ export default function ResultsPage({ diagnostic }: ResultsPageProps) {
               .filter(([, v]) => v === 'non' || v === 'ne_sais_pas')
               .map(([qId, v]) => (
                 <div key={qId} className="flex items-start gap-2 text-sm">
-                  <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs text-white ${
+                  <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs text-white mt-0.5 ${
                     v === 'non' ? 'bg-red-500' : 'bg-amber-500'
                   }`}>
                     {v === 'non' ? '!' : '?'}
                   </span>
-                  <span className="text-gray-600">{qId.toUpperCase()} — {v === 'non' ? 'Non' : 'Ne sais pas'}</span>
+                  <span className="text-gray-600">
+                    {questionTexts[qId] || qId.toUpperCase()}
+                  </span>
                 </div>
               ))}
           </div>
